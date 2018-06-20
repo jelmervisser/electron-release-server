@@ -65,8 +65,8 @@ module.exports = {
                 name: version.channel
               })
             }))
-            .then(resolve)
-            .catch(reject)
+              .then(resolve)
+              .catch(reject)
           }),
           // load assets
           new Promise(function (resolve, reject) {
@@ -75,36 +75,36 @@ module.exports = {
                 version: version.name
               })
             }))
-            .then(resolve)
-            .catch(reject)
+              .then(resolve)
+              .catch(reject)
           })
         ])
-        .then(function (results) {
-          response.items = response.items.map(function (item, index) {
-            return {
-              channel: results[0][index],
-              assets: results[1][index].map(function (asset) {
-                return {
-                  name: asset.name,
-                  platform: asset.platform,
-                  filetype: asset.filetype,
-                  hash: asset.hash,
-                  size: asset.size,
-                  download_count: asset.download_count,
-                  fd: asset.fd,
-                  createdAt: asset.createdAt,
-                  updatedAt: asset.updatedAt
-                }
-              }),
-              name: item.name,
-              notes: item.notes,
-              createdAt: item.createdAt,
-              updatedAt: item.updatedAt
-            }
-          })
+          .then(function (results) {
+            response.items = response.items.map(function (item, index) {
+              return {
+                channel: results[0][index],
+                assets: results[1][index].map(function (asset) {
+                  return {
+                    name: asset.name,
+                    platform: asset.platform,
+                    filetype: asset.filetype,
+                    hash: asset.hash,
+                    size: asset.size,
+                    download_count: asset.download_count,
+                    fd: asset.fd,
+                    createdAt: asset.createdAt,
+                    updatedAt: asset.updatedAt
+                  }
+                }),
+                name: item.name,
+                notes: item.notes,
+                createdAt: item.createdAt,
+                updatedAt: item.updatedAt
+              }
+            })
 
-          return response
-        })
+            return response
+          })
       })
       .then(response => {
         res.send(response);
@@ -307,11 +307,11 @@ module.exports = {
                 // Make sure the last version is a version with full asset
                 // so RELEASES contains at least one full asset (which is mandatory for Squirrel.Windows)
                 let v = _.filter(
-                    newVersion.assets,
-                    function(o) {
-                      return _.includes(o.name.toLowerCase(), '-full');
-                    }
-                  );
+                  newVersion.assets,
+                  function(o) {
+                    return _.includes(o.name.toLowerCase(), '-full');
+                  }
+                );
                 return v.length && semver.lte(
                   version, newVersion.name
                 );
@@ -428,9 +428,13 @@ module.exports = {
           var sha2 = asset.hash ? asset.hash.toLowerCase() : null
 
           var latestYml = "version: " + latestVersion.name
-                          + "\nreleaseDate: " + latestVersion.updatedAt
-                          + "\npath: " + downloadPath
-                          + "\nsha2: " + sha2;
+            + "\nfiles:"
+            + "\n  - url: " + downloadPath
+            + "\n    sha2: " + sha2
+            + "\n    size: " + asset.size
+            + "\npath: " + downloadPath
+            + "\nsha2: " + sha2
+            + "\nreleaseDate: " + latestVersion.updatedAt;
           res.ok(latestYml);
         } else {
           res.notFound();
@@ -500,9 +504,13 @@ module.exports = {
           var sha2 = asset.hash ? asset.hash.toLowerCase() : null
 
           var latestYml = "version: " + latestVersion.name
-                          + "\nreleaseDate: " + latestVersion.updatedAt
-                          + "\npath: " + downloadPath
-                          + "\nsha2: " + sha2;
+            + "\nfiles:"
+            + "\n  - url: " + downloadPath
+            + "\n    sha2: " + sha2
+            + "\n    size: " + asset.size
+            + "\npath: " + downloadPath
+            + "\nsha2: " + sha2
+            + "\nreleaseDate: " + latestVersion.updatedAt;
           res.ok(latestYml);
         } else {
           res.notFound();
